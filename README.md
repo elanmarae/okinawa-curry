@@ -1,37 +1,41 @@
 # Lesson 10: Creating a Dynamically Drawn Choropleth Map
 
-This lesson will instruct you how to create a dynamically generated choropleth map in Leaflet with an accompanying legend. It also explains how to use the JQuery JavaScript library to load an external data file using AJAX.
+This lesson will instruct you how to create a dynamically generated choropleth map in Leaflet with an accompanying legend. It also explains how to use the jQuery JavaScript library to load an external data file using AJAX.
 
 You'll be modifying the index file within the *lesson-10/* directory as you follow along with this lesson to produce the choropleth. Save your changes to your *lesson-10/index.html* file and **commit changes to your local GitHub repository** as you work. (**6pts**).
 
 You'll be creating a similar map with a different geography and data attribute for [Lab 10](lab-10/lab-10.md).
 
-## TOC
+## Table of Contents
 
-* [Using JQuery](#using-jquery)
-* [Dynamic loading data using JQuery's AJAX request](#dynamic-loading-data-using-jquerys-ajax-request)
-* [Drawing data to the map](#drawing-data-to-the-map)
-  * [Choropleth mapping in Leaflet](#choropleth-mapping-in-leaflet)
-  * [Classifying data and coloring the map](#classifying-data-and-coloring-the-map)
-* [Scripting a Dynamic Legend for a Choropleth Map](#scripting-a-dynamic-legend-for-a-choropleth-map)
+<!-- MarkdownTOC autolink="true" autoanchor="true" bracket="round" depth=0  -->
 
+- [Using jQuery](#using-jquery)
+- [Dynamic loading data using jQuery's AJAX request](#dynamic-loading-data-using-jquerys-ajax-request)
+- [Drawing data to the map](#drawing-data-to-the-map)
+    - [Choropleth mapping in Leaflet](#choropleth-mapping-in-leaflet)
+    - [Classifying data and coloring the map](#classifying-data-and-coloring-the-map)
+- [Scripting a Dynamic Legend for a Choropleth Map](#scripting-a-dynamic-legend-for-a-choropleth-map)
 
-## Using JQuery
+<!-- /MarkdownTOC -->
 
-[JQuery](https://jquery.com/), like Leaflet, is a library written in JavaScript intended to simplify web programming. It's particularly efficient at selecting and modifying DOM/HTML elements, dynamically applying style rules to these HTML elements, and handling user interaction events. Read more about JQuery: [https://jquery.com/](https://jquery.com/).
+<a name="using-jquery"></a>
+## Using jQuery
 
-We load JQuery in the same way as we did with Leaflet, using the `<script src=" …` in the head of the document. While we could easily save JQuery to a local file, we can also use the version hosted on a remote server. This approach to loading remotely hosted JavaScript libraries such as JQuery makes use of what is known as a Content Delivery Network, or CDN.
+[jQuery](https://jquery.com/), like Leaflet, is a library written in JavaScript intended to simplify web programming. It's particularly efficient at selecting and modifying DOM/HTML elements, dynamically applying style rules to these HTML elements, and handling user interaction events. Read more about jQuery: [https://jquery.com/](https://jquery.com/).
 
-To include JQuery in our project, we include the path to the most recent version (or whichever version we wish) of JQuery, along with Leaflet:
+We load jQuery in the same way as we did with Leaflet, using the `<script src=" …` in the head of the document. While we could easily save jQuery to a local file, we can also use the version hosted on a remote server. This approach to loading remotely hosted JavaScript libraries such as jQuery makes use of what is known as a Content Delivery Network, or CDN.
+
+To include jQuery in our project, we include the path to the most recent version (or whichever version we wish) of jQuery, along with Leaflet:
 
 ```javascript
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 ```
 
-That's it! Now we have the full power of JQuery at our disposal. We'll be playing more with JQuery in following modules. For now, we'll point out that JQuery has a common way of accessing all its methods. Remember how we access Leaflet's methods using the capital letter `L`? With JQuery, we can simply write `jQuery` or, for shorthand and more commonly, the dollar sign symbol `$`.
+That's it! Now we have the full power of jQuery at our disposal. We'll be playing more with jQuery in following modules. For now, we'll point out that jQuery has a common way of accessing all its methods. Remember how we access Leaflet's methods using the capital letter `L`? With jQuery, we can simply write `jQuery` or, for shorthand and more commonly, the dollar sign symbol `$`.
 
-While we won't go into this much now, an example of using JQuery would be to select our `<h1>` element within our web document, and dynamically change its content (within our `<script></script>` tags).
+While we won't go into this much now, an example of using jQuery would be to select our `<h1>` element within our web document, and dynamically change its content (within our `<script></script>` tags).
 
 ```javascript
 jQuery("h1").html("Housing Ownership in Kentucky");
@@ -42,14 +46,15 @@ jQuery("h1").html("Housing Ownership in Kentucky");
 $("h1").html("Housing Ownership in Kentucky");
 ```
 
-The result, when we refresh our web browser, is that upon the page load JQuery has selected the h1 tag and dynamically updated the content:
+The result, when we refresh our web browser, is that upon the page load jQuery has selected the h1 tag and dynamically updated the content:
 
 ![dynamically updated h1 content](graphics/h1-updated.png)  
 **Figure 01.** Dynamically updated h1 content
 
-JQuery offers many exciting possibilities for enriching a user experience, as well as an extended [JQuery UI](https://jqueryui.com/) library. For now, we're going to use it to dynamically load some data into our document for use with our Leaflet map.
+jQuery offers many exciting possibilities for enriching a user experience, as well as an extended [jQuery UI](https://jqueryui.com/) library. For now, we're going to use it to dynamically load some data into our document for use with our Leaflet map.
 
-## Dynamic loading data using JQuery's AJAX request
+<a name="dynamic-loading-data-using-jquerys-ajax-request"></a>
+## Dynamic loading data using jQuery's AJAX request
 
 So far within MAP672 we've loaded an external GeoJSON file into our script at runtime by creating that file as a JavaScript file and using the HTML `src` attribute (e.g., `<script src="power-plants.js"></script>`). Moving forward, we'll be using a different approach to get our data into our maps: a technique known as **asynchronous JavaScript and XML (AJAX)**.
 
@@ -86,9 +91,9 @@ Also, note that we've removed the default zoom controls, for now, using `zoomCon
 
 Note that we could also add a basemap tile layer to our leaflet map, but it's not always necessary. This lesson will continue with examples not using a basemap, but feel free to add one if you wish.
 
-Next let's load the *ky_counties_housing.json* file into the document. While JQuery has methods for loading data of various formats into the document ([http://api.jquery.com/category/ajax/](http://api.jquery.com/category/ajax/)), we see that there is one designed particularly for loading JSON-encoded data ([http://api.jquery.com/jquery.getjson/](http://api.jquery.com/jquery.getjson/)), the `getJSON()` method.
+Next let's load the *ky_counties_housing.json* file into the document. While jQuery has methods for loading data of various formats into the document ([http://api.jquery.com/category/ajax/](http://api.jquery.com/category/ajax/)), we see that there is one designed particularly for loading JSON-encoded data ([http://api.jquery.com/jquery.getjson/](http://api.jquery.com/jquery.getjson/)), the `getJSON()` method.
 
-We access JQuery's  `getJSON()` method using dot notation (in the same way we access all of Leaflet's methods). The method passes two arguments, the first being a string containing the URL of the file we're requesting (here a file named *ky_counties_housing.json* within a directory named *data/* relative to our *index.html* file), the second being a callback function that executes once the script successfully loads the data. We access our asynchronously loaded data within this callback function.
+We access jQuery's  `getJSON()` method using dot notation (in the same way we access all of Leaflet's methods). The method passes two arguments, the first being a string containing the URL of the file we're requesting (here a file named *ky_counties_housing.json* within a directory named *data/* relative to our *index.html* file), the second being a callback function that executes once the script successfully loads the data. We access our asynchronously loaded data within this callback function.
 
 ```javascript
 $.getJSON("data/ky_counties_housing.json", function(data) {
@@ -105,6 +110,7 @@ If we inspect our Console output in the browser, we recognize the GeoJSON data f
 
 We now have our data loaded into the document, and we're ready to map!
 
+<a name="drawing-data-to-the-map"></a>
 ## Drawing data to the map
 
 Within our callback function, we can immediately and easily create a Leaflet GeoJson layer with the GeoJSON data and add it to the map:
@@ -139,6 +145,7 @@ L.geoJson(data, {
 ![Kentucky county map with basic styles](graphics/styled-map.png)  
 **Figure 05.** Kentucky county map with basic styles.
 
+<a name="choropleth-mapping-in-leaflet"></a>
 ### Choropleth mapping in Leaflet
 
 Choropleth maps are another common type of thematic map that use enumeration units such as states or counties to show how much of a particular phenomenon each contains by proportional shading. These are among the most familiar of thematic map types to the general public, especially for making election maps.
@@ -147,7 +154,7 @@ Choropleth maps are best used to map continuous areal (or area-based) phenomena 
 
 To make a choropleth map, we need to establish two more pieces of information. First, we need to know the entire range of the particular data value we're encoding. Second, we need to determine the precise values with which we will classify that data range into discrete chunks. We could do some of this analysis prior to creating our GeoJSON file, either through analyzing the data tables within a conventional spreadsheet application such as OpenOffice Calc or Microsoft Excel. We could also run scripts written in JavaScript, Ruby, Python, or R to process our data and create attribute values that are normalized. However, for this module, we are going to do this analysis and determine the class breaks client-side at runtime using JavaScript.
 
-Because of the asynchronous aspect of the JQuery `getJSON()` method, we know that access to our data is available only within this callback function when the script has successfully loaded. We could therefore continue to write our entire script within the method's callback function. But instead lets call a new function
+Because of the asynchronous aspect of the jQuery `getJSON()` method, we know that access to our data is available only within this callback function when the script has successfully loaded. We could therefore continue to write our entire script within the method's callback function. But instead lets call a new function
 
 To do so, we'll declare a variable named `dataLayer` and assign our Leaflet GeoJson layer to it within the callback function. We can then use that variable as an argument when calling a new function `drawMap()`. This is how we control when and where our data is accessible to us within the script.
 
@@ -181,6 +188,7 @@ function drawMap(dataLayer) {
 }
 ```
 
+<a name="classifying-data-and-coloring-the-map"></a>
 ### Classifying data and coloring the map
 
 The nice thing about having already drawn our Kentucky counties GeoJSON to the Leaflet map is that now, rather than redrawing this map, we can simply loop through all its feature layers and update their fill color. Looping through the existing features is quite simple, as we can use the convenient Leaflet method `.eachLayer`. For example, we could  color all the county polygons yellow with the following code using Leaflet's `setStyle` method:
@@ -258,7 +266,7 @@ Within the *getClassBreaks* function body, we first create an empty array (here 
 
 While we could "hard-code" these intended attributes values into the script here, it will offer us more flexibility to assign these as variables. Where should we do this? Let's create two global variables (toward the top of the script before we load the data) that we'll name `attributeValue` and `normValue` and assign string values of  as "OWNED_MORT" and "OWNER", respectively.
 
-Add the `attributeValue` and `normValue` variables to your script, just above the JQuery method that loads our data:
+Add the `attributeValue` and `normValue` variables to your script, just above the jQuery method that loads our data:
 
 ```javascript
 var attributeValue = "OWNED_MORT",
@@ -291,7 +299,7 @@ For this example, we'll be using a newer classification method known as [ckmeans
 
 The problem is, implementing either the Jenks or ckmeans method involves some fairly difficult formulas to wrap our heads around, much less code in JavaScript. The good news is, we can again rely on the smart people within the open source community to do the heavy lifting for us! Web map developer Tom Macwright wrote a convenient JavaScript library called [Simple Statistics](http://simplestatistics.org/), [which contains a method *ckmeans* ](http://simplestatistics.org/docs/#ckmeans) that accepts input data as an array of numbers and the desired number of clusters, from which we can derive the class breaks. Perfect! How then do we use this library?
 
-To utilize the JQuery and Leaflet libraries, we've used the `<script src="` HTML code and a full URL path to the code hosted on a CDN. Like other libraries, Simple Statistics too is hosted on a CDN. We simply include another line in the head of our document and provide a link to *simple_statistics.js* :
+To utilize the jQuery and Leaflet libraries, we've used the `<script src="` HTML code and a full URL path to the code hosted on a CDN. Like other libraries, Simple Statistics too is hosted on a CDN. We simply include another line in the head of our document and provide a link to *simple_statistics.js* :
 
 ```javascript
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -299,7 +307,7 @@ To utilize the JQuery and Leaflet libraries, we've used the `<script src="` HTML
 <script src="https://unpkg.com/simple-statistics@2.5.0/dist/simple-statistics.min.js"></script>
 ```
 
-Once that JavaScript code within the *simple_statistics.js* file is available to us, we can access all of its methods with `ss` (similar to how `L` refers to Leaflet or the `$` sign refers to JQuery). So, once our `getClassBreaks()` function first determines the range of values and stores these in an array (here stored with a variable named `values`), we can determine 5 classification breaks using a method call written as `ss.ckmeans(values,5)`.  This method returns a 2-dimensional array, that is, an array of arrays. Within each array is a cluster of similar values we'll want to use for a given class on our map.
+Once that JavaScript code within the *simple_statistics.js* file is available to us, we can access all of its methods with `ss` (similar to how `L` refers to Leaflet or the `$` sign refers to jQuery). So, once our `getClassBreaks()` function first determines the range of values and stores these in an array (here stored with a variable named `values`), we can determine 5 classification breaks using a method call written as `ss.ckmeans(values,5)`.  This method returns a 2-dimensional array, that is, an array of arrays. Within each array is a cluster of similar values we'll want to use for a given class on our map.
 
 To color our map and build our legend, however, we want specific values to use as break points and not clusters of values. So we'll need our script to pull specific values from each of these clusters. But which ones? We can think of each cluster as a single class (i.e., will be colored the same) on our map.  We then want an array of the lowest value from each cluster, as well as the highest value in the range (we could also collect the lowest value in the range and the highest value in each cluster). To do so, we'll store our array of clusters as a variable and then invoke the [native JavaScript method `.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) on this variable. This method creates a new array comprising the results of a function's operations on each element of an array.
 
@@ -383,6 +391,7 @@ The result is a fairly attractive and effective choropleth map:
 
 To make this map more meaningful, however, we need a legend informing the user of what these colors mean.
 
+<a name="scripting-a-dynamic-legend-for-a-choropleth-map"></a>
 ## Scripting a Dynamic Legend for a Choropleth Map
 
 To make a legend, we'll be using a technique modified from another [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html). It makes use of Leaflet's Control class, which helps put user interface elements such as the zoom controls on the map. We'll use this Control class within a function we'll name `drawLegend`.
