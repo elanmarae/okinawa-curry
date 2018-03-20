@@ -1,12 +1,8 @@
 # Lab 10: Web Mapping A Choropleth Map
 
-This lab will focus more on building out your lesson JavaScript. We encourage you to explore the new libraries we introduce this week, jQuery and Simple Statistics, by looking the Part II challenge.
+This lab will focus more on building out your lesson JavaScript. We encourage you to explore the new libraries we introduce this week, jQuery and Simple Statistics.
 
-## Part I: Mapping Scenario: Homeownership rates in Kentucky (6pts)
-
-Modify the index file within the *lesson-10/* directory as you follow along with this lesson to produce a choropleth map of Kentucky showing rates of homeownership. Save your changes to your *lesson-10/index.html* file and commit changes to your local GitHub repository as you work.
-
-## Part II: Mapping Scenario: Patterns of US rental prices (4pts)
+## Mapping Scenario: Patterns of US rental prices (4 pts)
 
 Examine the contents of the *lab-10/data/* directory. This directory includes a starter template *index.html* file and a *counties_median_rent_2015.json* data file produced by joining data downloaded from [American FactFinder](https://factfinder.census.gov) with US county polygons downloaded from the [US Census Cartographic Boundary Shapefiles](https://www.census.gov/geo/maps-data/data/cbf/cbf_counties.html).
 
@@ -25,7 +21,11 @@ Use the lesson for guidance and edit the *lab-10/index.html* to fulfill the requ
 * Map should have a clear legend that shows the color and values (in correct units) of your class.
 * When the user mouses over count, a tooltip or popup will provide the name of the county and average rent value.
 * Page should have updated title and metadata information.
+* Code should be well-structured with indentions, comments, and meaningful variable and function names
 
-**Challenge:** Use jQuery to show a list ranking counties by their median gross rent values sorted from highest to lowest values. Also, add a state outline layer to help readers determine state boundaries.
+**Challenges:**
 
-Commit your work as you go and push to your repository and submit the link within Canvas by the due date.
+* Add a state outline layer to help readers determine state boundaries (hint: see the [jQuery .when() method](https://api.jquery.com/jquery.when/) for loading multiple files.
+* Use jQuery to show a list ranking counties by their median gross rent values sorted from highest to lowest values.
+
+Commit your work as you go, push to your repository, and submit the link within Canvas by the due date.

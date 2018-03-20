@@ -8,18 +8,11 @@ You'll be creating a similar map with a different geography and data attribute f
 
 ## Table of Contents
 
-<!-- MarkdownTOC autolink="true" autoanchor="true" bracket="round" depth=0  -->
-
-- [Using jQuery](#using-jquery)
-- [Dynamic loading data using jQuery's AJAX request](#dynamic-loading-data-using-jquerys-ajax-request)
-- [Drawing data to the map](#drawing-data-to-the-map)
-    - [Choropleth mapping in Leaflet](#choropleth-mapping-in-leaflet)
-    - [Classifying data and coloring the map](#classifying-data-and-coloring-the-map)
-- [Scripting a Dynamic Legend for a Choropleth Map](#scripting-a-dynamic-legend-for-a-choropleth-map)
-
-<!-- /MarkdownTOC -->
-
-<a name="using-jquery"></a>
+* [Using jQuery](#using-jquery)
+* [Dynamic loading data using jQuery's AJAX request](#dynamic-loading-data-using-jquerys-ajax-request)
+* [Drawing data to the map](#drawing-data-to-the-map)
+  + [Choropleth mapping in Leaflet](#choropleth-mapping-in-leaflet)
+  + [Classifying data and coloring the map](#classifying-data-and-coloring-the-map)
 ## Using jQuery
 
 [jQuery](https://jquery.com/), like Leaflet, is a library written in JavaScript intended to simplify web programming. It's particularly efficient at selecting and modifying DOM/HTML elements, dynamically applying style rules to these HTML elements, and handling user interaction events. Read more about jQuery: [https://jquery.com/](https://jquery.com/).
@@ -28,9 +21,10 @@ We load jQuery in the same way as we did with Leaflet, using the `<script src=" 
 
 To include jQuery in our project, we include the path to the most recent version (or whichever version we wish) of jQuery, along with Leaflet:
 
-```javascript
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+```html
+<!-- add jQuery JS script -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 ```
 
 That's it! Now we have the full power of jQuery at our disposal. We'll be playing more with jQuery in following modules. For now, we'll point out that jQuery has a common way of accessing all its methods. Remember how we access Leaflet's methods using the capital letter `L`? With jQuery, we can simply write `jQuery` or, for shorthand and more commonly, the dollar sign symbol `$`.
@@ -53,21 +47,20 @@ The result, when we refresh our web browser, is that upon the page load jQuery h
 
 jQuery offers many exciting possibilities for enriching a user experience, as well as an extended [jQuery UI](https://jqueryui.com/) library. For now, we're going to use it to dynamically load some data into our document for use with our Leaflet map.
 
-<a name="dynamic-loading-data-using-jquerys-ajax-request"></a>
 ## Dynamic loading data using jQuery's AJAX request
 
 So far within MAP672 we've loaded an external GeoJSON file into our script at runtime by creating that file as a JavaScript file and using the HTML `src` attribute (e.g., `<script src="power-plants.js"></script>`). Moving forward, we'll be using a different approach to get our data into our maps: a technique known as **asynchronous JavaScript and XML (AJAX)**.
 
 AJAX is a techie buzz word and involves several different web technologies such as JavaScript, the Document Object Module (DOM), and server requests (XMLHttpRequests). Ironically, it often does not involve XML (eXtensible Markup Language). The important thing to understand for now is that an AJAX request occurs after the page has loaded and enables a web application (such as our map) to load data or files without refreshing the page.
 
-AJAX is slick in this way and allows for a more seamless user experience as information is loaded and updated within a page without it being overly obvious. Google Maps, for instance, pioneered this technique when it introduced its tile-based slippy maps in 2005. We are loading only the tiles that are being displayed in the current viewport, which drastically increases the page load time. As the user pans or zooms around the map, new tiles are loaded on the fly using AJAX. For further reading on AJAX, see Garrett's now classic explanation written way back in 2005 ([http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications/](http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications/)).
+AJAX is slick in this way and allows for a more seamless user experience as information is loaded and updated within a page without it being overly obvious. Google Maps, for instance, pioneered this technique when it introduced its tile-based slippy maps in 2005. We are loading only the tiles that are being displayed in the current viewport, which drastically increases the page load time. As the user pans or zooms around the map, new tiles are loaded on the fly using AJAX. For further reading on AJAX, see Garrett's now classic explanation written back in 2005 ([http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications/](http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications/)).
 
 Take note that within this lab's data directory (*lab-10/data/*), there is a file named *ky_counties_housing.json*, which contains both geometry information for Kentucky counties and information about housing units in Kentucky collected in the 2010 census, aggregated to these county levels. You can examine the data contained within this text-based GeoJSON file within a text editor:
 
 ![GeoJSON data of Kentucky housing](graphics/geojson-data.png)  
 **Figure 02.** GeoJSON data of Kentucky housing.
 
-Note that beyond the latitude and longitude coordinates eroded for each county, there are also several data attributes with both string and numerical type values (e.g., `"NAME": "Ohio", "TOTAL": "10219", "OCCUPIED": "9176", "VACANT": "1043"`). The meanings of these data attributes are noted within the *ky_counties_housing.txt*.
+Note that beyond the latitude and longitude coordinates eroded for each county, there are also several data attributes with both string and strings that can be converted to numerical type values (e.g., `"NAME": "Ohio", "TOTAL": "10219", "OCCUPIED": "9176", "VACANT": "1043"`). The meanings of these data attributes are noted within the *ky_counties_housing.txt*.
 
 Rather than load this file as JavaScript, like we did with the power plants data in MAP672, we want to use our JavaScript to request this file after the page has loaded and make it available to us to use within the Leaflet map.
 
@@ -93,14 +86,17 @@ Note that we could also add a basemap tile layer to our leaflet map, but it's no
 
 Next let's load the *ky_counties_housing.json* file into the document. While jQuery has methods for loading data of various formats into the document ([http://api.jquery.com/category/ajax/](http://api.jquery.com/category/ajax/)), we see that there is one designed particularly for loading JSON-encoded data ([http://api.jquery.com/jquery.getjson/](http://api.jquery.com/jquery.getjson/)), the `getJSON()` method.
 
-We access jQuery's  `getJSON()` method using dot notation (in the same way we access all of Leaflet's methods). The method passes two arguments, the first being a string containing the URL of the file we're requesting (here a file named *ky_counties_housing.json* within a directory named *data/* relative to our *index.html* file), the second being a callback function that executes once the script successfully loads the data. We access our asynchronously loaded data within this callback function.
+We access jQuery's  `getJSON()` method using dot notation (in the same way we access all of Leaflet's methods). The method passes two arguments:
+
+1. the first being a string containing the URL of the file we're requesting (here a file named *ky_counties_housing.json* within a directory named *data/* relative to our *index.html* file), and 
+2. the second being a callback function that executes once the script successfully loads the data. We access our asynchronously loaded data within this callback function.
 
 ```javascript
 $.getJSON("data/ky_counties_housing.json", function(data) {
-    // the data loaded from the file is accessible here within this function scope!
-    console.log(data);
+  // the data loaded from the file is accessible here within this function scope!
+  console.log(data);
 });
-// data variable is not accessible here!
+// `data` parameter is not accessible here!
 ```
 
 If we inspect our Console output in the browser, we recognize the GeoJSON data from within the *ky_counties_housing.json* file (again, you can examine these data within a text editor as well and note the mirrored data structure between the *.json* file contents and what we've now loaded into our script).
@@ -110,14 +106,13 @@ If we inspect our Console output in the browser, we recognize the GeoJSON data f
 
 We now have our data loaded into the document, and we're ready to map!
 
-<a name="drawing-data-to-the-map"></a>
 ## Drawing data to the map
 
 Within our callback function, we can immediately and easily create a Leaflet GeoJson layer with the GeoJSON data and add it to the map:
 
 ```javascript
 $.getJSON("data/ky_counties_housing.json", function(data) {
-    L.geoJson(data).addTo(map);
+  L.geoJson(data).addTo(map);
 });
 ```
 
@@ -132,20 +127,19 @@ Since our intent is to make a choropleth map, let's change the fillOpacity of th
 
 ```javascript
 L.geoJson(data, {
-        style: function(feature) {
-        return {
-                color: '#dddddd',
-                weight: 1,
-                fillOpacity: 1,
-                fillColor: '#1f78b4'
-            };
-    }          
+  style: function(feature) {
+  return {
+      color: '#dddddd',
+      weight: 1,
+      fillOpacity: 1,
+      fillColor: '#1f78b4'
+    };
+  }          
 }).addTo(map);
 ```
 ![Kentucky county map with basic styles](graphics/styled-map.png)  
 **Figure 05.** Kentucky county map with basic styles.
 
-<a name="choropleth-mapping-in-leaflet"></a>
 ### Choropleth mapping in Leaflet
 
 Choropleth maps are another common type of thematic map that use enumeration units such as states or counties to show how much of a particular phenomenon each contains by proportional shading. These are among the most familiar of thematic map types to the general public, especially for making election maps.
@@ -161,20 +155,20 @@ To do so, we'll declare a variable named `dataLayer` and assign our Leaflet GeoJ
 ```javascript
 $.getJSON("data/ky_counties_housing.json", function(data) {
 
-    var dataLayer = L.geoJson(data, {
-            style: function(feature) {
-            return {
-                    color: '#dddddd',
-                    weight: 1,
-                    fillOpacity: 1,
-                    fillColor: '#1f78b4'
-                };
-        }          
-    }).addTo(map);
+  var dataLayer = L.geoJson(data, {
+    style: function(feature) {
+      return {
+          color: '#dddddd',
+          weight: 1,
+          fillOpacity: 1,
+          fillColor: '#1f78b4'
+      };
+    }          
+  }).addTo(map);
 
-    drawMap(dataLayer); // call to new function here gets the data out of the
-                        // callback function
-
+  // call to new function here gets the data out of the
+  // callback function
+  drawMap(dataLayer); 
 });
 ```
 
@@ -188,7 +182,6 @@ function drawMap(dataLayer) {
 }
 ```
 
-<a name="classifying-data-and-coloring-the-map"></a>
 ### Classifying data and coloring the map
 
 The nice thing about having already drawn our Kentucky counties GeoJSON to the Leaflet map is that now, rather than redrawing this map, we can simply loop through all its feature layers and update their fill color. Looping through the existing features is quite simple, as we can use the convenient Leaflet method `.eachLayer`. For example, we could  color all the county polygons yellow with the following code using Leaflet's `setStyle` method:
@@ -196,12 +189,11 @@ The nice thing about having already drawn our Kentucky counties GeoJSON to the L
 ```javascript
 function drawMap(dataLayer) {
 
-    dataLayer.eachLayer(function(layer) {
+  dataLayer.eachLayer(function(layer) {
 
-        layer.setStyle( { fillColor: 'yellow' } );
+    layer.setStyle( { fillColor: 'yellow' } );
 
-    });
-
+  });
 } // end drawMap()
 ```
 
@@ -215,12 +207,11 @@ However, rather than giving them all the same color, we want to assign a color b
 ```javascript
 function drawMap(dataLayer) {
 
-    dataLayer.eachLayer(function(layer) {
+  dataLayer.eachLayer(function(layer) {
 
-        console.log(layer);
+    console.log(layer);
 
-    });
-
+  });
 } // end drawMap()
 ```
 
@@ -250,13 +241,13 @@ Within our `drawMap()` function, declare a variable named `breaks` and assign to
 ```javascript
 function drawMap(dataLayer) {
 
-    var breaks = getClassBreaks(dataLayer);
+  var breaks = getClassBreaks(dataLayer);
 
 }
 
 function getClassBreaks(dataLayer) {
 
-    // code here to determine range and establish classification breaks
+  // code here to determine range and establish classification breaks
 }        
 ```
 
@@ -278,14 +269,21 @@ var attributeValue = "OWNED_MORT",
 We can now use these global variables to calculate the normalized value we want (i.e., the number of housing units owned with a mortgage or loan divided by the total number of housing units). We then push this calculated value into our array using the native JavaScript array `push()` method.
 
 ```javascript
+// empty array to hold all our values
 var values = [];
 
 dataLayer.eachLayer(function(layer) {
-    var value = layer.feature.properties[attributeValue]/layer.feature.properties[normValue];
-    values.push(value);   
+  // shorthand reference to properties
+  var props = layer.feature.properties 
+
+  // calculate the normalized value
+  var value = props[attributeValue]/props[normValue];
+  
+  // push that value to the array
+  values.push(value);   
 });
 
-console.log(values);
+console.log(values); // verify in the Console
 ```
 
 We can inspect the result of this computation with a `console.log()` statement, and the result is an array with a calculated value for each of our 120 Kentucky counties:
@@ -297,14 +295,16 @@ Now that we have all our data values stored within an array, how we determine th
 
 For this example, we'll be using a newer classification method known as [ckmeans](https://journal.r-project.org/archive/2011-2/RJournal_2011-2_Wang+Song.pdf). Similar to the "Jenks" or "natural  breaks" algorithm, the ckmeans method seeks to minimize differences within groups. In other words, it will find the values that cluster together and group these.
 
-The problem is, implementing either the Jenks or ckmeans method involves some fairly difficult formulas to wrap our heads around, much less code in JavaScript. The good news is, we can again rely on the smart people within the open source community to do the heavy lifting for us! Web map developer Tom Macwright wrote a convenient JavaScript library called [Simple Statistics](http://simplestatistics.org/), [which contains a method *ckmeans* ](http://simplestatistics.org/docs/#ckmeans) that accepts input data as an array of numbers and the desired number of clusters, from which we can derive the class breaks. Perfect! How then do we use this library?
+The problem is, implementing either the Jenks or ckmeans method involves some fairly difficult formulas to wrap our heads around, much less code in JavaScript. The good news is, we can again rely on the smart people within the open source community to do the heavy lifting for us! Web map developer Tom Macwright wrote a convenient JavaScript library called [Simple Statistics](http://simplestatistics.org/), [which contains a method *ckmeans* ](https://simplestatistics.org/docs/#ckmeans) that accepts input data as an array of numbers and the desired number of clusters, from which we can derive the class breaks. Perfect! How then do we use this library?
 
 To utilize the jQuery and Leaflet libraries, we've used the `<script src="` HTML code and a full URL path to the code hosted on a CDN. Like other libraries, Simple Statistics too is hosted on a CDN. We simply include another line in the head of our document and provide a link to *simple_statistics.js* :
 
-```javascript
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-<script src="https://unpkg.com/simple-statistics@2.5.0/dist/simple-statistics.min.js"></script>
+```html
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+<!-- add the simple stats library -->
+<script src="https://unpkg.com/simple-statistics@5.2.1/dist/simple-statistics.min.js"></script>
+
 ```
 
 Once that JavaScript code within the *simple_statistics.js* file is available to us, we can access all of its methods with `ss` (similar to how `L` refers to Leaflet or the `$` sign refers to jQuery). So, once our `getClassBreaks()` function first determines the range of values and stores these in an array (here stored with a variable named `values`), we can determine 5 classification breaks using a method call written as `ss.ckmeans(values,5)`.  This method returns a 2-dimensional array, that is, an array of arrays. Within each array is a cluster of similar values we'll want to use for a given class on our map.
@@ -315,52 +315,56 @@ In this case, we want to return the first element of each cluster (the `ss.ckmea
 
 ```javascript
 // determine similar clusters
-var clusters = ss.ckmeans(values, 5);  
+var clusters = ss.ckmeans(values, 5);
 
 // create an array of the lowest value within each cluster
 var breaks = clusters.map(function(cluster){
-        return [cluster[0],cluster.pop()];   
+  return [cluster[0],cluster.pop()];
 });
 
-console.log(breaks);
-````
+console.log(breaks); // verify your break values
+```
 
 This code results in an array stored as `breaks` that contains the low values of each class range, as well as the highest value of the entire dataset. We can return the resultant class breaks array to where it was called, the *getClassBreaks* function. You may again even wish to `console.log(breaks)` before the return statement to see the results. Our updated (complete) `getClassBreaks()` function now looks like this:
 
 ```javascript
 function getClassBreaks(dataLayer) {
 
-    // create empty Array for storing values
-    var values = [];
+  // create empty Array for storing values
+  var values = [];
 
-    // loop through all the counties
-    dataLayer.eachLayer(function(layer) {
-        var value = layer.feature.properties[attributeValue]/layer.feature.properties[normValue];
-        values.push(value);   // push the normalized value for each layer into the Array
-    });
+  // loop through all the counties
+  dataLayer.eachLayer(function(layer) {
+    var props = layer.feature.properties;
+    var value = props[attributeValue]/props[normValue];
+    values.push(value);  
+  });
 
-    // determine similar clusters
-    var clusters = ss.ckmeans(values, 5);  
+  // determine similar clusters
+  var clusters = ss.ckmeans(values, 5);  
 
-    // create an array of the lowest value within each cluster
-    var breaks = clusters.map(function(cluster){
-            return [cluster[0],cluster.pop()];   
-    });
+  // create an array of the lowest value within each cluster
+  var breaks = clusters.map(function(cluster){
+    return [cluster[0],cluster.pop()];   
+  });
 
-    return breaks; // return Array of class breaks
+  return breaks; // return Array of class breaks
 } // end getClassBreaks function
 ```
 
 Now that we have our classification breaks for a given range of data attribute values, we can use these to first color our Kentucky county polygons. Within our *drawMap* function, after we determine the class breaks, we can loop through each layer of our *dataLayer* and apply Leaflet's *setStyle* method to each layer to update the fill color of each. In a similar way as we dynamically assigned a radius size to our proportional symbols in MAP672, now we will assign a function call as the property value to the `fillColor` property name (thereby assigning a string encoding a hexadecimal color value returned from that function call). We'll name this function *getColor* and we'll pass it two arguments: 1) the calculated value for each polygon and 2) the derived class breaks.
 
 ```javascript
-    var breaks = getClassBreaks(dataLayer);
+  var breaks = getClassBreaks(dataLayer);
 
-    dataLayer.eachLayer(function(layer) {
-        layer.setStyle({
-            fillColor: getColor(layer.feature.properties[attributeValue]/layer.feature.properties[normValue], breaks)
-        });
+  dataLayer.eachLayer(function(layer) {
+    
+    var props = layer.feature.properties;
+
+    layer.setStyle({
+      fillColor: getColor(props[attributeValue]/props[normValue], breaks)
     });
+  });
 ```
 
 Before this code will work, however, we need to create the *getColor* function. This function accepts the calculated value and the array of classification breaks. It then either uses a serious of if/else if statements (or a switch statement such as in the [Leaflet Interactive Choropleth Map example](http://leafletjs.com/examples/choropleth.html) to determine which class a particular county's value falls within. It then returns a string value for a color.
@@ -379,7 +383,7 @@ function getColor(d, breaks) {
     } else if(d <= breaks[4][1]) {
         return '#045a8d'
     }
-}
+} // end getColor
 ```
 
 The color values here have been hard-coded within the function, and these colors were derived from [ColorBrewer](http://colorbrewer2.org/). Note how the break values are accessed using the index of the `breaks` array, which is itself a 2-dimensional array. We're creating 5 classes here: the lowest class will include the highest value from the lowest class range, the next will include the highest value from that class range, and so on.
@@ -391,10 +395,9 @@ The result is a fairly attractive and effective choropleth map:
 
 To make this map more meaningful, however, we need a legend informing the user of what these colors mean.
 
-<a name="scripting-a-dynamic-legend-for-a-choropleth-map"></a>
 ## Scripting a Dynamic Legend for a Choropleth Map
 
-To make a legend, we'll be using a technique modified from another [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html). It makes use of Leaflet's Control class, which helps put user interface elements such as the zoom controls on the map. We'll use this Control class within a function we'll name `drawLegend`.
+To make a legend, we'll be using a technique modified from another [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html). It makes use of [Leaflet's Control](http://leafletjs.com/reference-1.3.0.html#control) class, which helps put user interface elements such as the zoom controls on the map. We'll use this Control class within a function we'll name `drawLegend`.
 
 Conceptually, this function will:
 
@@ -407,7 +410,7 @@ Start by declaring the empty function, though note that we'll want it to accept 
 ```javascript
 function drawLegend(breaks) {
 
-    // function code will go in here
+  // function code will go in here
 
 }
 ```
@@ -419,7 +422,8 @@ We can then even log these values to Console with the `drawLegend` function.
 ```javascript
 function drawLegend(breaks) {
 
-    console.log(breaks);
+  // first verify the parameter's value
+  console.log(breaks);
 
 }
 ```
@@ -429,34 +433,40 @@ Next, we'll create a variable to reference the Leaflet Control object, and pass 
 ```javascript
 function drawLegend(breaks) {
 
-    var legend = L.control({position: 'topleft'});
+  // create the Leaflet control and position
+  var legend = L.control({position: 'topleft'});
 
-    legend.onAdd = function () {
+  // when it's added to the map
+  legend.onAdd = function () {
 
-        var div = L.DomUtil.create('div', 'legend');
+    // create a new DOM div element with a class name of "legend"
+    var div = L.DomUtil.create('div', 'legend');
 
-        div.innerHTML = "This is going to be legend information!";
+    // insert some placeholder text for now
+    div.innerHTML = "This is going to be legend information!";
 
-        return div;
+    // return the div element
+    return div;
 
-    };
+  };
 
-    legend.addTo(map);
+  // add the legend to the map
+  legend.addTo(map);
 }
 
 ```
 
 This code uses another Leaflet method, the `DomUtil` to create a new `div` HTML element with a class name of `legend`. We'll use this class name to style our legend with the CSS in a moment. After this method creates the div element and inserts some text using the native `innerHTML` method, we add the legend Control object to the map.
 
-We can create a new CSS rule at the top of our document as well, to add some preliminary styling to this legend element:
+We can create a new CSS rule at the top of our document as well, to select our newly created div element using the class name `legend` and add some preliminary styling to the element:
 
 ```css
 .legend {
-    padding: 6px 8px;
-    font-size: 1em;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
+  padding: 6px 8px;
+  font-size: 1em;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
 }
 ```
 
@@ -470,11 +480,11 @@ Let's now replace that placeholder text with the HTML we want to use to build th
 ```javascript
 legend.onAdd = function () {
 
-    var div = L.DomUtil.create('div', 'legend');
+  var div = L.DomUtil.create('div', 'legend');
 
-    div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
+  div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
 
-    return div;
+  return div;
 
 };
 ```
@@ -484,63 +494,63 @@ We then want to loop through our array of class breaks and build a visual elemen
 ```javascript
 legend.onAdd = function () {
 
-    var div = L.DomUtil.create('div', 'legend');
+  var div = L.DomUtil.create('div', 'legend');
 
-    div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
+  div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
 
-    for (var i = 0; i < breaks.length; i++) {
+  for (var i = 0; i < breaks.length; i++) {
 
-        var color = getColor(breaks[i][0], breaks);
+    var color = getColor(breaks[i][0], breaks);
 
-        div.innerHTML +=
-            '<span style="background:' + color + '"></span> ' +
-            '<label>'+(breaks[i][0]*100).toLocaleString() + ' &mdash; ' +
-            (breaks[i][1]*100).toLocaleString() + '</label>';
-}
+    div.innerHTML +=
+      '<span style="background:' + color + '"></span> ' +
+      '<label>'+(breaks[i][0]*100).toLocaleString() + ' &mdash; ' +
+      (breaks[i][1]*100).toLocaleString() + '</label>';
+  }
 
-    return div;
+  return div;
 }; // end onAdd method
 ```
 
 Here's the final `drawLegend` function.  Comments within it explain how the statements work to produce the legend.
 
 ```javascript
-    function drawLegend(breaks){
+function drawLegend(breaks){
 
-        // create a new Leaflet control object, and position it top left
-        var legend = L.control({position: 'topleft'});
+    // create a new Leaflet control object, and position it top left
+    var legend = L.control({position: 'topleft'});
 
-        // when the legend is added to the map
-        legend.onAdd = function () {
+    // when the legend is added to the map
+    legend.onAdd = function () {
 
-            // create a new HTML <div> element and give it a class name of "legend"
-            var div = L.DomUtil.create('div', 'legend');
+        // create a new HTML <div> element and give it a class name of "legend"
+        var div = L.DomUtil.create('div', 'legend');
 
-            // first append an <h3> tag to the div holding the current attribute
-            // and norm values (i.e., the mapped phenomena)
-            div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
+        // first append an <h3> tag to the div holding the current attribute
+        // and norm values (i.e., the mapped phenomena)
+        div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3>";
 
-            // for each of our breaks
-            for (var i = 0; i < breaks.length; i++) {
-                // determine the color associated with each break value,
-                // including the lower range value
-                var color = getColor(breaks[i][0], breaks);
+        // for each of our breaks
+        for (var i = 0; i < breaks.length; i++) {
+            // determine the color associated with each break value,
+            // including the lower range value
+            var color = getColor(breaks[i][0], breaks);
 
-                // concatenate a <span> tag styled with the color and the range values
-                // of that class and include a label with the low and a high ends of that class range
-                div.innerHTML +=
-                   '<span style="background:' + color + '"></span> ' +
-                   '<label>'+(breaks[i][0]*100).toLocaleString() + ' &mdash; ' +
-                    (breaks[i][1]*100).toLocaleString() + '</label>';
-            }
+            // concatenate a <span> tag styled with the color and the range values
+            // of that class and include a label with the low and a high ends of that class range
+            div.innerHTML +=
+                '<span style="background:' + color + '"></span> ' +
+                '<label>'+(breaks[i][0]*100).toLocaleString() + ' &mdash; ' +
+                (breaks[i][1]*100).toLocaleString() + '</label>';
+        }
 
-            // return the populated div to be added to the map
-            return div;
-        };
+        // return the populated div to be added to the map
+        return div;
+    };
 
-        // add the legend to the map
-        legend.addTo(map);
-    }
+    // add the legend to the map
+    legend.addTo(map);
+}
 ```
 
 Note that this is a very honest legend: it shows the low and high values of each class range and doesn't give the user the interpretation that there are continues data values between each of the classes.
@@ -601,4 +611,4 @@ map.addControl( L.control.zoom({ position: 'topright' }));
 ![Map with legend and zoom controls](graphics/map-zoom-controls.png)  
 **Figure 14.** Map with legend and zoom controls.
 
-We've now dynamically created a very versatile choropleth map.
+We've now dynamically created a very versatile choropleth map. To complete the lesson, be sure that your code is error-free, well-structured with indentions, and comments throughout explaining how the code. Push commits to the remote for help and for the final submission. Next, move on to complete [Lab 10](lab-10/).
