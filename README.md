@@ -44,7 +44,8 @@ Clone your new repository down to your local machine.
 **Step 3.** Create a new *index.html* file for your map in the root directory of your repository. You'll want to begin with a basic template, drawing from one of the lesson/labs (either a map constrained by pixel width or percentage, or full screen). Two options are provided within this repository to help get you started:
 
   * [constrained map width](templates/template-constrained.html)
-  * [full page map width](templates/template-full.html)
+  * [full-page map width](templates/template-full.html)
+  * [full-page mobile](templates/template-mobile.html)
 
 You're free to use another HTML structure or template of your own design as well.
 
@@ -75,9 +76,9 @@ Now, you can point your browser to https://*username*.github.io/*repository-name
 
 ## Deliverables and deadlines:
 
-* Aim to have a working draft of your map completed by **Monday, September 17th**. Post a link to your map as a Canvas Discussion post so fellow classmates can offer suggestions and feedback.
-* Submit the URL link to your web map by the due date: **Tuesday, September 18th**.
+* Aim to have a working draft of your map completed by **December 16th**. Post a link to your map as a Canvas Discussion post so fellow classmates can offer suggestions and feedback. (2pts)
+* Submit the URL link to your web map by the due date: **December 18th**. (8pts)
 
-I will be offering extended office hours on **Thursday, September 13th**, **Monday, September 17th**, and **Tuesday, September 18th**.
+I will be offering extended office hours during the last two weeks of the semester. Reach out and let me know if you want to Zoom.
 
 Happy mapping!
