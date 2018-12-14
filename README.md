@@ -37,7 +37,7 @@ Reach out to your instructor for help if you're having difficulty coming up with
 ![Creating a new GitHub repository](images/git-new-repo.png)  
 **Figure 01.** Creating a new GitHub repository.
 
-Create the new repository and then add your instructor (rgdonohue) as a collaborator in the GitHub settings so he can easily branch and push updates to your project.
+Create the new repository and then add your instructor (boydx) as a collaborator in the GitHub settings so he can easily branch and push updates to your project.
 
 Clone your new repository down to your local machine.
 
