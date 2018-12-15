@@ -1,5 +1,14 @@
 # Module 10: Final Map
 
+<!-- TOC -->
+
+- [Module 10: Final Map](#module-10-final-map)
+    - [Map topic and data](#map-topic-and-data)
+    - [Mapping process](#mapping-process)
+    - [Deliverables and deadlines:](#deliverables-and-deadlines)
+
+<!-- /TOC -->
+
 For our final week of MAP 672 you'll create individual maps of a geography and dataset of your choosing. Because we only have one week for this map, the expectations and requirements will be modest. You should think of a simple geographic phenomenon you'd like to map, and more importantly one that you can represent with a dataset that will be easily and quickly obtained.
 
 ## Map topic and data
@@ -37,7 +46,7 @@ Reach out to your instructor for help if you're having difficulty coming up with
 ![Creating a new GitHub repository](images/git-new-repo.png)  
 **Figure 01.** Creating a new GitHub repository.
 
-Create the new repository and then add your instructor (boydx) as a collaborator in the GitHub settings so he can easily branch and push updates to your project.
+Create the new repository and then add your instructor (double-check if you forgot their user id) as a collaborator in the GitHub settings so he can easily branch and push updates to your project.
 
 Clone your new repository down to your local machine.
 
