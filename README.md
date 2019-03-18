@@ -85,8 +85,44 @@ Now, you can point your browser to https://*username*.github.io/*repository-name
 
 ## Deliverables and deadlines:
 
-* Aim to have a working draft of your map completed by **December 16th**. Post a link to your map as a Canvas Discussion post so fellow classmates can offer suggestions and feedback. (2pts)
-* Submit the URL link to your web map by the due date: **December 18th**. (8pts)
+* Aim to have a working draft of your map completed by **March 24th**. Post a link to your map in the Canvas Discussion forum so fellow classmates can offer suggestions and feedback. Make sure you reciprocate the discussion! (2 pts)
+
+* You need to complete the `publish.json` file which supports sharing your work with the world and controlling what information you present in a marker popup. This metadata file will help make a map [similar to this map](https://newmapsplus.github.io/projects/). 
+
+  The template file [can be found here](templates/publish.json) and it must be placed in the root directory of your repository. Before you alter this file, look at the following properties that you need to change: (2 pts)
+
+  ```js
+  {
+    // Required properties
+    "title": "Title of Project", // Give your project a good title
+    "info": "Add info about project", // A short blurb about your project
+    "coordinates": [38, -84.5], // IMPORTANT: the lat, long centerpoint of your project
+
+    // Optional properties
+    // If you don't want to use these, use the value null without quotes.
+    "author": "Do you want to add your name?", // What handle do you want to use?
+    "link": "http://newmapsplus.uky.edu" // What's the link to the project or your social media?
+  }
+  ```
+
+  Let's consider an example of a properly formatted `publish.json` file: 
+
+  ```js
+  {
+    // Required properties
+    "title": "A map of NMP students & alums",
+    "info": "View where the NMP mappers live and work!", 
+    "coordinates": [34.5, -94.5],
+
+    // Optional properties
+    // If you don't want to use these, use the value null without quotes.
+    "author": null, // Let's not give an author's name
+    "link": "http://newmapsplus.uky.edu/projects" // What's the link to the project or your social media?
+  }
+  ```
+
+
+* Submit the URL link to your Github Pages map by the due date: **March 28th**. (6 pts)
 
 I will be offering extended office hours during the last two weeks of the semester. Reach out and let me know if you want to Zoom.
 
