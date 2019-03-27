@@ -246,9 +246,12 @@
 		}).addTo(map);
 
 		museumLayer.eachLayer(function(layer) {
-
+			var popup = ""
 			if (layer.feature.properties.NAME_EN != null) {
-				}
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
 		// map.on('click', function(e) {
@@ -289,7 +292,12 @@
 		}).addTo(map);
 
 		curryLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
 		// map.on('click', function(e) {
@@ -330,7 +338,12 @@
 		}).addTo(map);
 
 		hotelLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
 		// map.on('click', function(e) {
@@ -371,7 +384,12 @@
 		}).addTo(map);
 
 		vistaLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
 		// map.on('click', function(e) {
@@ -411,7 +429,12 @@
 		}).addTo(map);
 
 		busLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
 		// map.on('click', function(e) {
