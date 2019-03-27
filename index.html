@@ -189,7 +189,8 @@
 	<script src="data/curry.js"></script>
 	<script src="data/hotels.js"></script>
 	<script src="data/museums.js"></script>
-	<script src="viewpoint.js"></script>
+	<script src="data/viewpoint.js"></script>
+	<script src="data/bus.js"></script>
 	<script>
 		// map options
 		var options = {
@@ -223,7 +224,8 @@
 		var commonStyles = {
 			weight: 1,
 			stroke: 1,
-			fillOpacity: .4
+			fillOpacity: .4,
+			radius: 5
 		};
 
 		var museumLayer = L.geoJson(museums, {
@@ -238,35 +240,36 @@
 			style: function(feature) {
 				return {
 					color: 'blue',
-					fillColor: 'blue',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'blue'
 				}
 			}
 		}).addTo(map);
 
 		museumLayer.eachLayer(function(layer) {
-			console.log(layer);
+
+			if (layer.feature.properties.NAME_EN != null) {
+				}
 		});
 
-		map.on('click', function(e) {
-			museumLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	museumLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var curryLayer = L.geoJson(curry, {
 			pointToLayer: function(feature, latlng) {
@@ -280,8 +283,7 @@
 			style: function(feature) {
 				return {
 					color: 'red',
-					fillColor: 'red',
-					radius: getRadius(feature.properties)
+					fillColor: 'red'
 				}
 			}
 		}).addTo(map);
@@ -290,25 +292,25 @@
 			console.log(layer);
 		});
 
-		map.on('click', function(e) {
-			curryLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: true,
-						fill: true,
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	curryLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true,
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var hotelLayer = L.geoJson(hotels, {
 			pointToLayer: function(feature, latlng) {
@@ -322,8 +324,7 @@
 			style: function(feature) {
 				return {
 					color: 'green',
-					fillColor: 'green',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'green'
 				}
 			}
 		}).addTo(map);
@@ -332,25 +333,25 @@
 			console.log(layer);
 		});
 
-		map.on('click', function(e) {
-			hotelLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	hotelLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var vistaLayer = L.geoJSON(viewpoints, {
 			pointToLayer: function(feature, latlng) {
@@ -364,8 +365,7 @@
 			style: function(feature) {
 				return {
 					color: 'purple',
-					fillColor: 'purple',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'purple'
 				}
 			}
 		}).addTo(map);
@@ -374,24 +374,24 @@
 			console.log(layer);
 		});
 
-		map.on('click', function(e) {
-			vistaLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	vistaLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var busLayer = L.geoJson(bus, {
 			pointToLayer: function(feature, latlng) {
@@ -405,8 +405,7 @@
 			style: function(feature) {
 				return {
 					color: 'white',
-					fillColor: 'white',
-					radius: getRadius(feature.properties.HIGHWAY.bus_stop)
+					fillColor: 'white'
 				}
 			}
 		}).addTo(map);
@@ -415,24 +414,25 @@
 			console.log(layer);
 		});
 
-		map.on('click', function(e) {
-			busLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	busLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+					
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var sourcesLayers = {
 			"CoCo Ichibanya Curry House": curryLayer,
