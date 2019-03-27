@@ -136,6 +136,37 @@
 				width: 100%;
 			}
 		}
+
+		.layers {
+			margin: 5px;
+			padding: 6px;
+			color: white;
+		}
+
+		.leaflet-control-layers label {
+			padding: 5px;
+		}
+		
+		.curry {
+			background-color:red;
+		}
+
+		.museum {
+			background-color:blue;
+		}
+
+		.vista {
+			background-color:purple;
+		}
+
+		.hotel {
+			background-color:green;
+		}
+
+		.bus {
+			background-color: gray;
+		}
+
 	</style>
 </head>
 
@@ -463,11 +494,11 @@
 		
 
 		var sourcesLayers = {
-			"CoCo Ichibanya Curry House": curryLayer,
-			"Museums": museumLayer,
-			"Vistas": vistaLayer,
-			"Hotels": hotelLayer,
-			"Convenient Bus Stops": busLayer
+			"<span class='layers curry'>CoCo Ichibanya Curry House</span>": curryLayer,
+			"<span class='layers museum'>Museums</span>": museumLayer,
+			"<span class='layers vista'>Vistas</span>": vistaLayer,
+			"<span class='layers hotel'>Hotels</span>": hotelLayer,
+			"<span class='layers bus'>Convenient Bus Stops</span>": busLayer
 		}
 		L.control.layers(null, sourcesLayers, {
 			collapsed: false
