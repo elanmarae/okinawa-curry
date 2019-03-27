@@ -228,6 +228,55 @@
 			radius: 5
 		};
 
+		var busLayer = L.geoJson(bus, {
+			pointToLayer: function(feature, latlng) {
+				return L.circleMarker(latlng, commonStyles);
+			},
+			filter: function(feature) {
+				if (feature.properties.HIGHWAY) {
+					console.log(feature)
+					return feature;
+				}
+			},
+			style: function(feature) {
+				return {
+					color: 'gray',
+					fillColor: 'white',
+					radius: 2
+				}
+			}
+		}).addTo(map);
+
+		busLayer.eachLayer(function(layer) {
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			console.log(popup)
+			popup += "Bus stop"
+			layer.bindPopup(popup)
+		});
+
+		// map.on('click', function(e) {
+		// 	busLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+					
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
+
 		var museumLayer = L.geoJson(museums, {
 			pointToLayer: function(feature, latlng) {
 				return L.circleMarker(latlng, commonStyles);
@@ -411,51 +460,7 @@
 		// 	});
 		// });
 
-		var busLayer = L.geoJson(bus, {
-			pointToLayer: function(feature, latlng) {
-				return L.circleMarker(latlng, commonStyles);
-			},
-			filter: function(feature) {
-				if (feature.properties.HIGHWAY.bus_stop) {
-					return feature;
-				}
-			},
-			style: function(feature) {
-				return {
-					color: 'white',
-					fillColor: 'white'
-				}
-			}
-		}).addTo(map);
-
-		busLayer.eachLayer(function(layer) {
-			var popup = ""
-			if (layer.feature.properties.NAME_EN != null) {
-				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
-			}
-			popup += layer.feature.properties.TOURISM
-			layer.bindPopup(popup)
-		});
-
-		// map.on('click', function(e) {
-		// 	busLayer.eachLayer(function(layer) {
-		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-		// 		if (distance > 2) {
-		// 			layer.setStyle({
-		// 				stroke: false,
-		// 				fill: false
-		// 			});
-		// 		} else {
-		// 			layer.setStyle({
-		// 				stroke: true,
-		// 				fill: true
-		// 			});
-					
-		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
-		// 				"km</b> from the click point.");
-		// 		}
-		// 	});
-		// });
+		
 
 		var sourcesLayers = {
 			"CoCo Ichibanya Curry House": curryLayer,
