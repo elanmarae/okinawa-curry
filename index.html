@@ -32,12 +32,12 @@
 
 		h1 {
 			font-weight: 900;
-			font-size: 2.2em;
+			font-size: 2.8em;
 			font-style: italic;
 			letter-spacing: .02em;
 			margin: 5px 0;
-			color: red;
-			text-shadow: 0 0 30px white, 0 0 40px orange, 0 0 50px orange, 0 0 80px orange;
+			color:white;
+			text-shadow: 0 0 5px red, 0 0 10px red, 0 0 20px pink, 0 0 30px red, 0 0 50px pink, 0 0 80px red;
 		}
 
 		h2 {
@@ -47,8 +47,8 @@
 			letter-spacing: .06em;
 			font-style: italic;
 			margin: 5px 0;
-			color: red;
-			text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 60px white;
+			color: white;
+			/* text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white, 0 0 60px white; */
 		}
 
 		h3 {
@@ -132,10 +132,45 @@
 		@media screen and (max-width: 900px) {
 
 			.first-column,
-			.second-column {
+			.column {
 				width: 100%;
 			}
+
+			h1 {
+				font-size: 2em;
+			}
 		}
+
+		.layers {
+			margin: 5px;
+			padding: 6px;
+			color: white;
+		}
+
+		.leaflet-control-layers label {
+			padding: 5px;
+		}
+		
+		.curry {
+			background-color:red;
+		}
+
+		.museum {
+			background-color:blue;
+		}
+
+		.vista {
+			background-color:purple;
+		}
+
+		.hotel {
+			background-color:green;
+		}
+
+		.bus {
+			background-color: gray;
+		}
+
 	</style>
 </head>
 
@@ -189,7 +224,8 @@
 	<script src="data/curry.js"></script>
 	<script src="data/hotels.js"></script>
 	<script src="data/museums.js"></script>
-	<script src="viewpoint.js"></script>
+	<script src="data/viewpoint.js"></script>
+	<script src="data/bus.js"></script>
 	<script>
 		// map options
 		var options = {
@@ -223,8 +259,58 @@
 		var commonStyles = {
 			weight: 1,
 			stroke: 1,
-			fillOpacity: .4
+			fillOpacity: .4,
+			radius: 5
 		};
+
+		var busLayer = L.geoJson(bus, {
+			pointToLayer: function(feature, latlng) {
+				return L.circleMarker(latlng, commonStyles);
+			},
+			filter: function(feature) {
+				if (feature.properties.HIGHWAY) {
+					console.log(feature)
+					return feature;
+				}
+			},
+			style: function(feature) {
+				return {
+					color: 'gray',
+					fillColor: 'white',
+					radius: 2
+				}
+			}
+		}).addTo(map);
+
+		busLayer.eachLayer(function(layer) {
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			console.log(popup)
+			popup += "Bus stop"
+			layer.bindPopup(popup)
+		});
+
+		// map.on('click', function(e) {
+		// 	busLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+					
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var museumLayer = L.geoJson(museums, {
 			pointToLayer: function(feature, latlng) {
@@ -238,35 +324,39 @@
 			style: function(feature) {
 				return {
 					color: 'blue',
-					fillColor: 'blue',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'blue'
 				}
 			}
 		}).addTo(map);
 
 		museumLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
-		map.on('click', function(e) {
-			museumLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	museumLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var curryLayer = L.geoJson(curry, {
 			pointToLayer: function(feature, latlng) {
@@ -280,35 +370,39 @@
 			style: function(feature) {
 				return {
 					color: 'red',
-					fillColor: 'red',
-					radius: getRadius(feature.properties)
+					fillColor: 'red'
 				}
 			}
 		}).addTo(map);
 
 		curryLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += "Curry!"
+			layer.bindPopup(popup)
 		});
 
-		map.on('click', function(e) {
-			curryLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: true,
-						fill: true,
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	curryLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true,
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var hotelLayer = L.geoJson(hotels, {
 			pointToLayer: function(feature, latlng) {
@@ -322,35 +416,39 @@
 			style: function(feature) {
 				return {
 					color: 'green',
-					fillColor: 'green',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'green'
 				}
 			}
 		}).addTo(map);
 
 		hotelLayer.eachLayer(function(layer) {
-			console.log(layer);
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
+			}
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
-		map.on('click', function(e) {
-			hotelLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				//console.log(distance);
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	hotelLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		//console.log(distance);
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
 
 		var vistaLayer = L.geoJSON(viewpoints, {
 			pointToLayer: function(feature, latlng) {
@@ -364,82 +462,47 @@
 			style: function(feature) {
 				return {
 					color: 'purple',
-					fillColor: 'purple',
-					radius: getRadius(feature.properties.TOURISM)
+					fillColor: 'purple'
 				}
 			}
 		}).addTo(map);
 
 		vistaLayer.eachLayer(function(layer) {
-			console.log(layer);
-		});
-
-		map.on('click', function(e) {
-			vistaLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
-
-		var busLayer = L.geoJson(bus, {
-			pointToLayer: function(feature, latlng) {
-				return L.circleMarker(latlng, commonStyles);
-			},
-			filter: function(feature) {
-				if (feature.properties.HIGHWAY.bus_stop) {
-					return feature;
-				}
-			},
-			style: function(feature) {
-				return {
-					color: 'white',
-					fillColor: 'white',
-					radius: getRadius(feature.properties.HIGHWAY.bus_stop)
-				}
+			var popup = ""
+			if (layer.feature.properties.NAME_EN != null) {
+				popup = "<h3>" + layer.feature.properties.NAME_EN + "</h3>"
 			}
-		}).addTo(map);
-
-		busLayer.eachLayer(function(layer) {
-			console.log(layer);
+			popup += layer.feature.properties.TOURISM
+			layer.bindPopup(popup)
 		});
 
-		map.on('click', function(e) {
-			busLayer.eachLayer(function(layer) {
-				var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
-				if (distance > 2) {
-					layer.setStyle({
-						stroke: false,
-						fill: false
-					});
-				} else {
-					layer.setStyle({
-						stroke: true,
-						fill: true
-					});
-					layer.bindPopup("I am <b>" + distance.toLocaleString() +
-						"km</b> from the click point.");
-				}
-			});
-		});
+		// map.on('click', function(e) {
+		// 	vistaLayer.eachLayer(function(layer) {
+		// 		var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000;
+		// 		if (distance > 2) {
+		// 			layer.setStyle({
+		// 				stroke: false,
+		// 				fill: false
+		// 			});
+		// 		} else {
+		// 			layer.setStyle({
+		// 				stroke: true,
+		// 				fill: true
+		// 			});
+		// 			layer.bindPopup("I am <b>" + distance.toLocaleString() +
+		// 				"km</b> from the click point.");
+		// 		}
+		// 	});
+		// });
+
+		
 
 		var sourcesLayers = {
-			"CoCo Ichibanya Curry House": curryLayer,
-			"Museums": museumLayer,
-			"Vistas": vistaLayer,
-			"Hotels": hotelLayer,
-			"Convenient Bus Stops": busLayer
+			"<span class='layers curry'>CoCo Ichibanya Curry House</span>": curryLayer,
+			"<span class='layers museum'>Museums</span>": museumLayer,
+			"<span class='layers vista'>Vistas</span>": vistaLayer,
+			"<span class='layers hotel'>Hotels</span>": hotelLayer,
+			"<span class='layers bus'>Convenient Bus Stops</span>": busLayer
 		}
 		L.control.layers(null, sourcesLayers, {
 			collapsed: false
